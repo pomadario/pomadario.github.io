@@ -1,35 +1,70 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Drive GPT Sync</title>
+  <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body style="font-family:sans-serif;padding:2rem;max-width:600px;margin:auto;">
   <h1>📁 Drive GPT Sync</h1>
-  <p>Benvenuto nella tua Web App personale per sincronizzare i tuoi progetti GPT con Google Drive.</p>
+  <p>Web App per caricare file nel tuo Google Drive - GPT Connected</p>
 
   <h2>🔐 Accesso</h2>
-  <button onclick="handleGoogleAuth()">Accedi con Google</button>
+  <button onclick="authenticate().then(loadClient)">Accedi con Google</button>
 
-  <h2>📄 Upload file in cartella GPT</h2>
+  <h2>📄 Upload file</h2>
   <input type="file" id="fileInput">
-  <button onclick="uploadToDrive()">Carica su Drive</button>
+  <button onclick="uploadFile()">Carica su Drive</button>
 
-  <pre id="log" style="background:#f0f0f0;padding:1rem;border-radius:5px;margin-top:2rem;">Log:</pre>
+  <pre id="log" style="background:#f0f0f0;padding:1rem;border-radius:5px;margin-top:2rem;white-space:pre-wrap;">Log:</pre>
 
-  <script>
-    async function handleGoogleAuth() {
-      document.getElementById("log").textContent += "\n[🔄] Autenticazione Google in corso... (funzione da completare)";
-    }
+<script>
+  const CLIENT_ID = "306170806464-rk4a666mos7itqf4kdooqg55l8me6b49.apps.googleusercontent.com";
+  const API_KEY = ""; // opzionale se usi solo OAuth
+  const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+  const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
-    async function uploadToDrive() {
-      const file = document.getElementById("fileInput").files[0];
-      if (!file) return alert("Seleziona un file prima di caricare.");
-      document.getElementById("log").textContent += `\n[📤] Pronto a caricare: ${file.name}`;
-      // Qui andrebbe la logica API Google Drive per caricare realmente
-    }
-  </script>
+  function log(msg) {
+    document.getElementById("log").textContent += "\n" + msg;
+  }
+
+  function authenticate() {
+    return gapi.auth2.init({ client_id: CLIENT_ID }).then(function () {
+      return gapi.auth2.getAuthInstance().signIn();
+    }).then(() => log("✅ Autenticazione completata"));
+  }
+
+  function loadClient() {
+    gapi.client.setApiKey(API_KEY);
+    return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
+      .then(() => log("📦 API Drive caricata"));
+  }
+
+  function uploadFile() {
+    const file = document.getElementById("fileInput").files[0];
+    if (!file) return alert("Seleziona un file.");
+
+    const metadata = {
+      name: file.name,
+      mimeType: file.type || 'application/octet-stream'
+    };
+
+    const accessToken = gapi.auth.getToken().access_token;
+    const form = new FormData();
+    form.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
+    form.append("file", file);
+
+    fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id", {
+      method: "POST",
+      headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
+      body: form
+    }).then(res => res.json())
+      .then(val => log("📁 File caricato con ID: " + val.id))
+      .catch(err => log("❌ Errore: " + err.message));
+  }
+
+  gapi.load("client:auth2", () => log("🔄 Libreria Google API pronta"));
+</script>
 </body>
 </html>
