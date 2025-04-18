@@ -4,21 +4,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Drive GPT Sync</title>
+  <title>Drive GPT Sync Potenziata</title>
   <script src="https://apis.google.com/js/api.js"></script>
+  <script src="https://apis.google.com/js/client.js"></script>
 </head>
-<body style="font-family:sans-serif;padding:2rem;max-width:600px;margin:auto;">
-  <h1>📁 Drive GPT Sync</h1>
-  <p>Web App per caricare file nel tuo Google Drive - GPT Connected</p>
+<body style="font-family:sans-serif;padding:2rem;max-width:700px;margin:auto;">
+  <h1>🚀 Drive GPT Sync – Web App Potenziata</h1>
 
-  <h2>🔐 Accesso</h2>
-  <button onclick="handleGoogleAuth()">Accedi con Google</button>
+  <button onclick="handleGoogleAuth()">🔐 Accedi con Google</button>
+  <button onclick="handleGoogleLogout()">🚪 Logout</button>
 
-  <h2>📄 Upload file</h2>
+  <h3 style="margin-top:2rem;">📂 Scegli una cartella Drive:</h3>
+  <button onclick="chooseDriveFolder()">Scegli cartella</button>
+  <p id="folderStatus">Nessuna cartella selezionata</p>
+
+  <h3>📄 Carica un file</h3>
   <input type="file" id="fileInput">
-  <button onclick="uploadSelectedFile()">Carica su Drive</button>
+  <button onclick="uploadToSelectedFolder()">Carica su Drive</button>
 
-  <pre id="log" style="background:#f0f0f0;padding:1rem;border-radius:5px;margin-top:2rem;white-space:pre-wrap;">Log:</pre>
+  <h3 style="margin-top:2rem;">🧾 File caricati:</h3>
+  <ul id="fileList"></ul>
+
+  <pre id="log" style="background:#f5f5f5;padding:1rem;border-radius:5px;margin-top:2rem;white-space:pre-wrap;">Log:</pre>
 
   <script src="autoUploader.js"></script>
 </body>
