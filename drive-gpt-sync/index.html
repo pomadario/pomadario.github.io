@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drive GPT Sync</title>
+</head>
+<body style="font-family:sans-serif;padding:2rem;max-width:600px;margin:auto;">
+  <h1>📁 Drive GPT Sync</h1>
+  <p>Benvenuto nella tua Web App personale per sincronizzare i tuoi progetti GPT con Google Drive.</p>
+
+  <h2>🔐 Accesso</h2>
+  <button onclick="handleGoogleAuth()">Accedi con Google</button>
+
+  <h2>📄 Upload file in cartella GPT</h2>
+  <input type="file" id="fileInput">
+  <button onclick="uploadToDrive()">Carica su Drive</button>
+
+  <pre id="log" style="background:#f0f0f0;padding:1rem;border-radius:5px;margin-top:2rem;">Log:</pre>
+
+  <script>
+    async function handleGoogleAuth() {
+      document.getElementById("log").textContent += "\n[🔄] Autenticazione Google in corso... (funzione da completare)";
+    }
+
+    async function uploadToDrive() {
+      const file = document.getElementById("fileInput").files[0];
+      if (!file) return alert("Seleziona un file prima di caricare.");
+      document.getElementById("log").textContent += `\n[📤] Pronto a caricare: ${file.name}`;
+      // Qui andrebbe la logica API Google Drive per caricare realmente
+    }
+  </script>
+</body>
+</html>
